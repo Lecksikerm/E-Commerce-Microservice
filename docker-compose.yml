@@ -1,0 +1,27 @@
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/api-gateway/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - postgres-user
+
+  postgres-user:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user_service
+      POSTGRES_PASSWORD: user_service_pass
+      POSTGRES_DB: user_service_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_user_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_user_data:
